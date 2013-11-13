@@ -4,7 +4,7 @@ pl-timeinput
 AngularJS time selector
 
 
-<a href="https://github.com/randallmeeker/pl-input-time">DEMO</a>
+<a href="http://plnkr.co/edit/lkmcbmD0XYhmx3bg87cs?p=preview">DEMO</a>
 
 Angular Strap did not easily play well with other date time objects
 and editing the time in an INPUT was preferable to AngularUI's control.
