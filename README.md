@@ -9,7 +9,7 @@ AngularJS time selector
 Angular Strap did not easily play well with other date time objects
 and editing the time in an INPUT was preferable to AngularUI's control.
 
-&lt;input type=&quot;text&quot; ng-model=&quot;myTime&quot; pl-time-picker&gt;;
+&lt;input type=&quot;text&quot; ng-model=&quot;myTime&quot; pl-input-time&gt;;
 
 If your interested please rip this apart. Looking for lessons in proper use of AngularJs, javaScript and GitHub.
 
