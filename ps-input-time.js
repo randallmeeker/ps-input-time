@@ -1,5 +1,5 @@
-angular.module('pl.inputTime', [])
-.directive("plInputTime", function($filter) {
+angular.module('ps.inputTime', [])
+.directive("psInputTime", function($filter) {
     var TIME_REGEXP = '((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)';
     var WRAP_TEMPLATE = '<div style="display: inline-block;" class="pl-timepicker-wrapper">';
     return {
