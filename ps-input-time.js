@@ -1,6 +1,6 @@
 angular.module('ps.inputTime', [])
 .directive("psInputTime", function($filter) {
-    var TIME_REGEXP = '((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)';
+    var TIME_REGEXP = '((0?[0-9])|(1[0-2]))(:|\s)([0-5][0-9])[ap]m';
     return {
         restrict: "A",
         require: '?^ngModel',
@@ -45,6 +45,7 @@ angular.module('ps.inputTime', [])
                 e.preventDefault();
                 selectTime('hour');
             })
+            
 
             var timeRegExp = new RegExp('^' + TIME_REGEXP + '$', ['i']);
 
@@ -76,11 +77,11 @@ angular.module('ps.inputTime', [])
 
             function getSelectionPoint() {
                 var pos = element.prop("selectionStart")
-                if (pos < 3) {
+                if (pos < 2) {
                     return 'hour'
-                } else if (pos < 6) {
+                } else if (pos < 5) {
                     return 'minute'
-                } else if (pos < 9) {
+                } else if (pos < 8) {
                     return 'meridian'
                 }
             }
@@ -96,14 +97,14 @@ angular.module('ps.inputTime', [])
                     }, 0);
                 } else {
                     setTimeout(function() {
-                        element[0].setSelectionRange(6, 8)
+                        element[0].setSelectionRange(5, 7)
                     }, 0);
                 }
             }
 
             function formatter(value) {
                 if (value) {
-                    return $filter('date')(value, 'hh:mm a');
+                    return $filter('date')(value, 'hh:mma');
                 }
             }
             ngModel.$formatters.push(formatter);
@@ -155,11 +156,11 @@ angular.module('ps.inputTime', [])
                 }
                 selectTime(cPoint);
             }
-
+            // hhmmaa hh:mmaa HH:mmaa h:mm
             function parseTime(time){
                 var hours = Number(time.match(/^(\d+)/)[1]);
                 var minutes = Number(time.match(/:(\d+)/)[1]);
-                var AMPM = time.match(/\s(.*)$/)[1];
+                var AMPM = time.match(/[apAP][mM]/)[0];
                 AMPM = AMPM.toUpperCase();
                 if(AMPM == "PM" && hours<12) hours = hours+12;
                 if(AMPM == "AM" && hours==12) hours = hours-12;
