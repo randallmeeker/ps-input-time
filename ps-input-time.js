@@ -172,6 +172,9 @@ angular.module('ps.inputTime', [])
             
             function addMinutes(minutes) {
                 selected = ngModel.$modelValue;
+                if( isNaN(selected) ){
+                    selected = new Date();
+                }
                 var dt = new Date(selected.getTime() + minutes * 60000);
                 selected.setHours(dt.getHours(), dt.getMinutes());
 
