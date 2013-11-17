@@ -77,7 +77,7 @@ angular.module('ps.inputTime', [])
 
             function getSelectionPoint() {
                 var pos = element.prop("selectionStart")
-                if (pos < 2) {
+                if (pos < 3) {
                     return 'hour'
                 } else if (pos < 5) {
                     return 'minute'
