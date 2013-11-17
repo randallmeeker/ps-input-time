@@ -112,7 +112,7 @@ angular.module('ps.inputTime', [])
                 if (value) {
                     if(timeRegExp.test(element.val())){
                         parsedTime = parseTime(element.val())
-                        selected = ngModel.$modelValue;
+                        selected = isNaN(ngModel.$modelValue) ? new Date() : ngModel.$modelValue;
                         selected.setHours(parsedTime.hours, parsedTime.minutes)
                         ngModel.$setValidity('time', true)
                         return new Date(selected)
