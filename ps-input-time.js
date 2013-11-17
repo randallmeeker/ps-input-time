@@ -1,7 +1,6 @@
 angular.module('ps.inputTime', [])
 .directive("psInputTime", function($filter) {
     var TIME_REGEXP = '((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)';
-    var WRAP_TEMPLATE = '<div style="display: inline-block;" class="pl-timepicker-wrapper">';
     return {
         restrict: "A",
         require: '?^ngModel',
@@ -10,7 +9,6 @@ angular.module('ps.inputTime', [])
             if (!ngModel) {
                 return; // do nothing if no ng-model
             }
-            element.wrap(WRAP_TEMPLATE) // future use
             element.on('keydown', function(e) {
                 switch (e.keyCode) {
                     case 37:
