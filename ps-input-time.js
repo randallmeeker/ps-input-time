@@ -1,6 +1,12 @@
 angular.module('ps.inputTime', [])
 .directive("psInputTime", function($filter) {
     var TIME_REGEXP = '((0?[0-9])|(1[0-2]))(:|\s)([0-5][0-9])[ap]m';
+    var psInputConfig = {
+        minuteStep : 5
+    }
+    var customFloor = function(value, roundTo) {
+        return Math.floor(value / psInputConfig.minuteStep) * psInputConfig.minuteStep;
+    }    
     return {
         restrict: "A",
         require: '?^ngModel',
@@ -130,7 +136,7 @@ angular.module('ps.inputTime', [])
                 if (cPoint == 'hour') {
                     addMinutes(60);
                 } else if (cPoint == 'minute') {
-                    addMinutes(1);
+                     addMinutes(psInputConfig.minuteStep);
                 } else if (cPoint == 'meridian') {
                     if (ngModel.$modelValue.getHours > 12) {
                         addMinutes(-720)
@@ -175,6 +181,7 @@ angular.module('ps.inputTime', [])
                 selected = ngModel.$modelValue;
                 if( isNaN(selected) ){
                     selected = new Date();
+                    select = selected.setMinutes(customFloor(selected.getMinutes()));
                 }
                 var dt = new Date(selected.getTime() + minutes * 60000);
                 selected.setHours(dt.getHours(), dt.getMinutes());
