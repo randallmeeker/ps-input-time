@@ -9,7 +9,13 @@ AngularJS time selector
 Angular Strap did not easily play well with other date time objects
 and editing the time in an INPUT was preferable to AngularUI's control.
 
-&lt;input type=&quot;text&quot; ng-model=&quot;myTime&quot; pl-input-time&gt;
+    // include js scripts
+    <script src="js/angular.js"></script>
+    <script src="js/ps-input-time.js"></script>
+    // add to your app
+    var app = angular.module('myApp', ['ps.inputTime']);
+    // add input
+    <input type="text" ng-model="myTime" ps-input-time>
 
 Supports input formats: HHmm, hh:mmAM, HH:mm for easy keyboard input. Use arrow keys (up,down,left,right,tab) to select and adjust time.
 
