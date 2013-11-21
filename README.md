@@ -1,4 +1,4 @@
-pl-timeinput
+psInputTime
 ============
 
 AngularJS time selector
