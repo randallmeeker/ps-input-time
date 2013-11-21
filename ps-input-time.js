@@ -124,6 +124,11 @@ angular.module('ps.inputTime', [])
 
             function verifyFormat(){
                 if(checkTimeFormat( element.val() ) == '12hr') return true;
+                else if (element.val() === ''){
+                    element.val(formatter(getDefaultDate()));
+                    selectTime('hour');
+                    return true;                    
+                }
                 else if (checkTimeFormat( element.val() ) != 'invalid') {
                     element.val(formatter(ngModel.$modelValue));
                     selectTime('hour');
