@@ -35,6 +35,9 @@ angular.module('ps.inputTime', [])
                 return angular.isDefined(value) ? scope.$parent.$eval(value) : defaultValue;
             }
 
+            if(attrs.min || attrs.max){
+                fixedDay = false;
+            }
 
             if (attrs.min) {
                 scope.$parent.$watch($parse(attrs.min), function(value) {
