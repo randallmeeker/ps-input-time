@@ -197,7 +197,9 @@ angular.module('ps.inputTime', [])
             }
             
             function getDefaultDate(){
-                return new Date();
+                if(minDate !== null) return new Date(minDate)
+                else if (maxDate !== null) return new Date(maxDate)
+                else return new Date();
             }
 
             function parser(value) {
@@ -207,8 +209,8 @@ angular.module('ps.inputTime', [])
                     if(value instanceof Date){
                         ngModel.$setValidity('time', true);
                         
-                        if(minDate != null && value < minDate) value = minDate;
-                        if(maxDate != null && value > maxDate) value = maxDate;
+                        if(minDate !== null && value < minDate) value = minDate;
+                        if(maxDate !== null && value > maxDate) value = maxDate;
                         
                         return value;
                         
