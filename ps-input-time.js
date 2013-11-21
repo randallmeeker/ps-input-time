@@ -89,7 +89,7 @@ angular.module('ps.inputTime', [])
                         if(verifyFormat()){ 
                             tabForward(e);
                             reservedKey = true;
-                            
+
                         }
                         break;
                     case 40:
@@ -142,12 +142,18 @@ angular.module('ps.inputTime', [])
                 if(checkTimeFormat( element.val() ) == '12hr') return true;
                 else if (element.val() === ''){
                     element.val(formatter(getDefaultDate()));
-                    selectTime('hour');
+                    ngModel.$setViewValue(getDefaultDate())
+                    setTimeout(function() {
+                        selectTime('hour');
+                    }, 0);
                     return true;                    
                 }
                 else if (checkTimeFormat( element.val() ) != 'invalid') {
                     element.val(formatter(ngModel.$modelValue));
-                    selectTime('hour');
+                    ngModel.$setViewValue(getDefaultDate())
+                    setTimeout(function() {
+                        selectTime('hour');
+                    }, 0);
                     return true;
                 } else return false;
             }
@@ -170,13 +176,16 @@ angular.module('ps.inputTime', [])
 
             function getSelectionPoint() {
                 var pos = element.prop("selectionStart");
+                if(element.val().length < 1){
+                    return 'hour';
+                }
                 if (pos < 3) {
                     return 'hour';
                 } else if (pos < 5) {
                     return 'minute';
                 } else if (pos < 8) {
                     return 'meridian';
-                } else return 'unkown';
+                } else return 'unknown';
             }
 
             function tabForward() {
@@ -287,7 +296,7 @@ angular.module('ps.inputTime', [])
                 } else if (cPoint == 'minute') {
                      addMinutes(minuteStep);
                 } else if (cPoint == 'meridian') {
-                    if (ngModel.$modelValue.getHours > 12) {
+                    if ((ngModel.$modelValue ? ngModel.$modelValue : getDefaultDate()).getHours > 12) {
                         addMinutes(-720);
                     } else {
                         addMinutes(720);
@@ -303,7 +312,7 @@ angular.module('ps.inputTime', [])
                 } else if (cPoint == 'minute') {
                     addMinutes(-1);
                 } else if (cPoint == 'meridian') {
-                    if (ngModel.$modelValue.getHours > 12) {
+                    if ((ngModel.$modelValue ? ngModel.$modelValue : getDefaultDate()).getHours > 12) {
                         addMinutes(720);
                     } else {
                         addMinutes(-720);
@@ -313,7 +322,7 @@ angular.module('ps.inputTime', [])
             }
             
             function addMinutes(minutes){
-                selected = ngModel.$modelValue;
+                selected = ngModel.$modelValue ? ngModel.$modelValue : getDefaultDate()
                 dt = new Date(selected.getTime() + minutes * 60000);
                 if(fixedDay === true || fixedDay == 'true'){
                     dt = selected.setHours(dt.getHours(), dt.getMinutes());
