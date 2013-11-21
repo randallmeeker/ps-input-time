@@ -29,7 +29,7 @@ angular.module('ps.inputTime', [])
             var minuteStep = getValue(attrs.minuteStep, psInputTimeConfig.minuteStep),
                 fixedDay = getValue(attrs.fixedDay, psInputTimeConfig.fixedDay),
                 maxDate = null,
-                minDate = null
+                minDate = null;
 
             function getValue(value, defaultValue) {
                 return angular.isDefined(value) ? scope.$parent.$eval(value) : defaultValue;
@@ -197,8 +197,8 @@ angular.module('ps.inputTime', [])
             }
             
             function getDefaultDate(){
-                if(minDate !== null) return new Date(minDate)
-                else if (maxDate !== null) return new Date(maxDate)
+                if(minDate !== null) return new Date(minDate);
+                else if (maxDate !== null) return new Date(maxDate);
                 else return new Date();
             }
 
@@ -307,7 +307,7 @@ angular.module('ps.inputTime', [])
             function addMinutes(minutes){
                 selected = ngModel.$modelValue;
                 dt = new Date(selected.getTime() + minutes * 60000);
-                if(fixedDay == true || fixedDay == 'true'){
+                if(fixedDay === true || fixedDay == 'true'){
                     dt = selected.setHours(dt.getHours(), dt.getMinutes());
                     dt = new Date(dt);
                 }
