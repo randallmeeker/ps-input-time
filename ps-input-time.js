@@ -39,21 +39,28 @@ angular.module('ps.inputTime', [])
                 fixedDay = false;
             }
 
+            function checkMinMaxValid(){
+              if(minDate !== null && ngModel.$modelValue < minDate){
+                  ngModel.$setValidity('time-min', false);
+              }else if (minDate !== null) ngModel.$setValidity('time-min', true);
+              
+              if(maxDate !== null && ngModel.$modelValue > maxDate){
+                  ngModel.$setValidity('time-max', false);
+              } else if (maxDate !== null) ngModel.$setValidity('time-max', true);  
+                  
+            }
+
             if (attrs.min) {
                 scope.$parent.$watch($parse(attrs.min), function(value) {
                   minDate = value ? new Date(value) : null;
-                  if(minDate !== null && ngModel.$modelValue < minDate){
-                      ngModel.$setValidity('time-min', false);
-                  }else if (minDate !== null) ngModel.$setValidity('time-min', true);
+                  checkMinMaxValid()
                 });
             }
             
             if (attrs.max) {
                 scope.$parent.$watch($parse(attrs.max), function(value) {
                   maxDate = value ? new Date(value) : null;
-                  if(maxDate !== null && ngModel.$modelValue > maxDate){
-                      ngModel.$setValidity('time-max', false);
-                  } else if (maxDate !== null) ngModel.$setValidity('time-max', true);              
+                  checkMinMaxValid()
                 });
             }
 
@@ -207,6 +214,7 @@ angular.module('ps.inputTime', [])
                 if(value){
                     
                     if(value instanceof Date){
+                        checkMinMaxValid()
                         ngModel.$setValidity('time', true);
                         
                         if(minDate !== null && value < minDate) value = minDate;
