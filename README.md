@@ -9,14 +9,19 @@ AngularJS time selector
 Angular Strap did not easily play well with other date time objects
 and editing the time in an INPUT was preferable to AngularUI's control.
 
-&lt;input type=&quot;text&quot; ng-model=&quot;myTime&quot; pl-input-time&gt;;
+&lt;input type=&quot;text&quot; ng-model=&quot;myTime&quot; pl-input-time&gt;
+
+Supports input formats: HHmm, hh:mmAM, HH:mm for easy keyboard input. Use arrow keys (up,down,left,right,tab) to select and adjust time.
+
+<p><strong>ngModel:</strong> required, watched, date object, default: local now</p>
+<p><strong>fixedDay:</strong> optional, boolean, default: false. If time can move past a 24 hour restriction and adjust the day of the date object.</p>
+<p><strong>minuteStep:</strong> optional, numeric, default: 5. How many minutes to increase time when using the UP arrow key. The down arrow key always is 1 minute.</p>
+<p><strong>min/max:</strong> optional, watched, date object, forces limits. Important when fixedDay = false</p>
+
 
 If your interested please rip this apart. Looking for lessons in proper use of AngularJs, javaScript and GitHub.
 
 ToDo
 <ul>
-  <li>Select each time part needs to fail silently when manually editing time</li>
   <li>Wrap a popup (like AngularUI) for easy mobile input, or if possible, revert to html5 input=time for mobile.</li>
-  <li>Support inputing time in the following additional formats HH:mm, HHmm, hhmmAA (for speed I want time to be able to be input with keypad only)</li>
-  <li>KeyPress TAB should scroll through time parts, and leave input after.</li>
 </ul>
