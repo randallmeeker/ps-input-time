@@ -67,7 +67,7 @@ angular.module('ps.inputTime', [])
 
             var reservedKey = false;
 
-            element.on('keydown', function(e) {
+            element.on('keydown blur', function(e) {
                 reservedKey = false;
                 switch (e.keyCode) {
                     case 37:
