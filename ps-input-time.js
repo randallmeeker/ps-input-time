@@ -3,10 +3,11 @@ angular.module('ps.inputTime', [])
         minuteStep : 5,
         minDate : null,
         maxDate : null,
-        fixedDay: true
+        fixedDay: true,
+        format: 'hh:mma'
     })
 .directive("psInputTime", ['$filter', 'psInputTimeConfig', '$parse', function($filter, psInputTimeConfig, $parse) {
-    var temp12hr = '((0?[0-9])|(1[0-2]))(:|\s)([0-5][0-9])[ap]m',
+    var temp12hr = '((0?[0-9])|(1[0-2]))(:|\s)([0-5][0-9])[apAP][mM]',
         temp24hr = '([01]?[0-9]|2[0-3])[:;][0-5][0-9]',
         temp24noColon = '(2[0-3]|[01]?[0-9])([0-5][0-9])';
     var customFloor = function(value, roundTo) {
@@ -24,10 +25,11 @@ angular.module('ps.inputTime', [])
             
             ngModel.$render = function () {
                
-            };            
+            };
 
             var minuteStep = getValue(attrs.minuteStep, psInputTimeConfig.minuteStep),
                 fixedDay = getValue(attrs.fixedDay, psInputTimeConfig.fixedDay),
+                timeFormat = attrs.format || psInputTimeConfig.format,
                 maxDate = null,
                 minDate = null;
 
@@ -46,33 +48,32 @@ angular.module('ps.inputTime', [])
               
               if(maxDate !== null && ngModel.$modelValue > maxDate){
                   ngModel.$setValidity('time-max', false);
-              } else if (maxDate !== null) ngModel.$setValidity('time-max', true);  
+              } else if (maxDate !== null) ngModel.$setValidity('time-max', true);
                   
+            }
+
+            if (attrs.max) {
+                scope.$parent.$watch($parse(attrs.max), function(value) {
+                  maxDate = value ? new Date(value) : null;
+                  checkMinMaxValid();
+                });
             }
 
             if (attrs.min) {
                 scope.$parent.$watch($parse(attrs.min), function(value) {
                   minDate = value ? new Date(value) : null;
-                  checkMinMaxValid()
+                  checkMinMaxValid();
                 });
             }
             
-            if (attrs.max) {
-                scope.$parent.$watch($parse(attrs.max), function(value) {
-                  maxDate = value ? new Date(value) : null;
-                  checkMinMaxValid()
-                });
-            }
-
-
             var reservedKey = false;
 
-            element.on('keydown blur', function(e) {
+            element.on('keydown', function(e) {
                 reservedKey = false;
                 switch (e.keyCode) {
                     case 37:
                         // left button hit
-                        if(verifyFormat()){ 
+                        if(verifyFormat()){
                             tabBackward(e);
                             reservedKey = true;
                         }
@@ -86,7 +87,7 @@ angular.module('ps.inputTime', [])
                         break;
                     case 39:
                         // right button hit
-                        if(verifyFormat()){ 
+                        if(verifyFormat()){
                             tabForward(e);
                             reservedKey = true;
 
@@ -125,11 +126,11 @@ angular.module('ps.inputTime', [])
                 if(reservedKey){
                     e.preventDefault();
                 }
-            }).on('keyup', function(){
+            }).on('keyup blur', function(){
                 if(checkTimeFormat(element.val()) != 'invalid' && !reservedKey){
                     scope.$apply(function (){
                         ngModel.$setViewValue(createDateFromTime(element.val(), ngModel.$modelValue));
-                    });                          
+                    });
                 }
                 
             }).on('click', function() {
@@ -142,15 +143,15 @@ angular.module('ps.inputTime', [])
                 if(checkTimeFormat( element.val() ) == '12hr') return true;
                 else if (element.val() === ''){
                     element.val(formatter(getDefaultDate()));
-                    ngModel.$setViewValue(getDefaultDate())
+                    ngModel.$setViewValue(getDefaultDate());
                     setTimeout(function() {
                         selectTime('hour');
                     }, 0);
-                    return true;                    
+                    return true;
                 }
                 else if (checkTimeFormat( element.val() ) != 'invalid') {
                     element.val(formatter(ngModel.$modelValue));
-                    ngModel.$setViewValue(getDefaultDate())
+                    ngModel.$setViewValue(getDefaultDate());
                     setTimeout(function() {
                         selectTime('hour');
                     }, 0);
@@ -219,11 +220,10 @@ angular.module('ps.inputTime', [])
             }
 
             function parser(value) {
-                
+               
                 if(value){
-                    
-                    if(value instanceof Date){
-                        checkMinMaxValid()
+                    if(angular.isDate(value)){
+                        checkMinMaxValid();
                         ngModel.$setValidity('time', true);
                         
                         if(minDate !== null && value < minDate) value = minDate;
@@ -232,6 +232,7 @@ angular.module('ps.inputTime', [])
                         return value;
                         
                     } else{
+                        
                         ngModel.$setValidity('time', false);
                         return ngModel.$modelValue;
                     }
@@ -245,12 +246,11 @@ angular.module('ps.inputTime', [])
             function formatter(value) {
                 
                 if (value) {
-                    
-                    return $filter('date')(value, 'hh:mma');
+                    return $filter('date')(value, timeFormat);
                 }
             }
             
-            ngModel.$formatters.push(formatter);     
+            ngModel.$formatters.push(formatter);
             
             function createDateFromTime(time,cdate){
                 if(isNaN(cdate)){
@@ -262,8 +262,8 @@ angular.module('ps.inputTime', [])
                     hours = Number(time.match(/^(\d+)/)[1]);
                     minutes = Number(time.match(/:(\d+)/)[1]);
                     AMPM = time.match(/[apAP][mM]/)[0];
-                    if(AMPM == "PM" && hours<12) hours = hours+12;
-                    if(AMPM == "AM" && hours==12) hours = hours-12;                   
+                    if(AMPM.toUpperCase() == "PM" && hours<12) hours = hours+12;
+                    if(AMPM.toUpperCase() == "AM" && hours==12) hours = hours-12;
                 } else if (ct == '24hr'){
                     hours = time.split(/[;:]/)[0];
                     minutes = time.split(/[;:]/)[1];
@@ -322,7 +322,7 @@ angular.module('ps.inputTime', [])
             }
             
             function addMinutes(minutes){
-                selected = ngModel.$modelValue ? ngModel.$modelValue : getDefaultDate()
+                selected = ngModel.$modelValue ? new Date(ngModel.$modelValue) : getDefaultDate();
                 dt = new Date(selected.getTime() + minutes * 60000);
                 if(fixedDay === true || fixedDay == 'true'){
                     dt = selected.setHours(dt.getHours(), dt.getMinutes());
