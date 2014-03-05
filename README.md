@@ -22,7 +22,7 @@ Supports input formats: HHmm, hh:mmAM, HH:mm for easy keyboard input. Use arrow 
 <p><strong>ngModel:</strong> required, watched, date object, default: local now</p>
 <p><strong>fixedDay:</strong> optional, boolean, default: false. If time can move past a 24 hour restriction and adjust the day of the date object.</p>
 <p><strong>minuteStep:</strong> optional, numeric, default: 5. How many minutes to increase time when using the UP arrow key. The down arrow key always is 1 minute.</p>
-<p><strong>min/max:</strong> optional, watched, date object, forces limits. Important when fixedDay = false</p>
+<p><strong>minDate/maxDate:</strong> optional, watched, date object, forces limits. Important when fixedDay = false</p>
 
 
 If your interested please rip this apart. Looking for lessons in proper use of AngularJs, javaScript and GitHub.
