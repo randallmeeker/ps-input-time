@@ -26,7 +26,7 @@ angular.module('ps.inputTime', [])
             if (!ngModel) return; // do nothing if no ng-model
             
             ngModel.$render = function () {
-               
+               element.val(formatter(ngModel.$modelValue));
             };
 
             var minuteStep = getValue(attrs.minuteStep, psInputTimeConfig.minuteStep),
