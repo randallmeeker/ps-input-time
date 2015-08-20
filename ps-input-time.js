@@ -8,12 +8,14 @@ angular.module('ps.inputTime', [])
     })
 .directive("psInputTime", ['$filter', 'psInputTimeConfig', '$parse', function($filter, psInputTimeConfig, $parse) {
     var temp12hr = '((0?[0-9])|(1[0-2]))(:|\s)([0-5][0-9])[apAP][mM]',
+        temp12noColon = '((0?[0-9])|(1[0-2]))([0-5][0-9])[apAP][mM]',
         temp24hr = '([01]?[0-9]|2[0-3])[:;][0-5][0-9]',
         temp24noColon = '(2[0-3]|[01]?[0-9])([0-5][0-9])';
     var customFloor = function(value, roundTo) {
         return Math.floor(value / psInputConfig.minuteStep) * psInputConfig.minuteStep;
     };
     var timeTest12hr = new RegExp('^' + temp12hr + '$', ['i']),
+        timeTest12noColon = new RegExp('^' + temp12noColon + '$', ['i']),
         timeTest24hr = new RegExp('^' + temp24hr + '$', ['i']),
         timeTest24noColon = new RegExp('^' + temp24noColon + '$', ['i']);
     return {
@@ -24,7 +26,7 @@ angular.module('ps.inputTime', [])
             if (!ngModel) return; // do nothing if no ng-model
             
             ngModel.$render = function () {
-               
+               element.val(formatter(ngModel.$modelValue));
             };
 
             var minuteStep = getValue(attrs.minuteStep, psInputTimeConfig.minuteStep),
@@ -270,11 +272,19 @@ angular.module('ps.inputTime', [])
                 } else if (ct == '24nc') {
                     hours = time.length == 4 ? time.substr(0,2) : time.substr(0,1);
                     minutes = time.substr(-2);
+                } else if (ct == '12nc') {
+                    timeAsNumber = Number(time.match(/^(\d+)/)[1]).toString();
+                    hours = timeAsNumber.length == 4 ? Number(timeAsNumber.substr(0,2)) : Number(timeAsNumber.substr(0,1));
+                    minutes = Number(timeAsNumber.substr(-2));
+                    AMPM = time.match(/[apAP][mM]/)[0];
+                    if(AMPM.toUpperCase() == "PM" && hours<12) hours = hours+12;
+                    if(AMPM.toUpperCase() == "AM" && hours==12) hours = hours-12;
                 } else {
                     return 'invalid';
                 }
                 sHours = hours.toString();
                 sMinutes = minutes.toString();
+                console.log('sMinutes', sMinutes, 'sHours', sHours);
                 if(hours<10) sHours = "0" + sHours;
                 if(minutes<10) sMinutes = "0" + sMinutes;
                 cdate.setHours(sHours,sMinutes);
@@ -285,6 +295,7 @@ angular.module('ps.inputTime', [])
                 if(timeTest12hr.test(value)) return '12hr';
                 else if (timeTest24hr.test(value)) return '24hr';
                 else if (timeTest24noColon.test(value)) return '24nc';
+                else if (timeTest12noColon.test(value)) return '12nc';
                 else return 'invalid';
             }
             
