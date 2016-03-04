@@ -285,8 +285,8 @@
                   checkMinMaxValid();
                   ngModel.$setValidity('time', true);
 
-                  if (minDate !== null && value < minDate) value = minDate;
-                  if (maxDate !== null && value > maxDate) value = maxDate;
+                  if (minDate !== null && value < minDate) value = new Date(minDate);
+                  if (maxDate !== null && value > maxDate) value = new Date(maxDate);
 
                   return value;
 
